@@ -1,7 +1,8 @@
-package com.svtask;
+package com.svtask.main;
 
 import java.util.Random;
 
+import com.svtask.settings.SettingsActivity;
 import com.svtask2.R;
 
 import android.app.Activity;
@@ -9,8 +10,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,7 +25,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {			
+public class MainActivity extends ActionBarActivity {			
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class MainActivity extends Activity {
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+		}		
 	}
 
 	@Override
@@ -49,6 +52,9 @@ public class MainActivity extends Activity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			
+			startActivity(new Intent(this, SettingsActivity.class));
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

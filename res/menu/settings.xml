@@ -1,11 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.svtask2.SettingsActivity" >
+    xmlns:sabd="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
+        android:id="@+id/select_all"
+        android:title="@string/select_all"        
+        sabd:showAsAction="always" />
+      
 </menu>
