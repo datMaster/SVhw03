@@ -3,6 +3,7 @@ package com.svtask.settings;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.svtask.adapters.SettingsItemsAdapter;
 import com.svtask2.R;
 
 import android.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class SettingsActivity extends ActionBarActivity {
@@ -28,7 +30,7 @@ public class SettingsActivity extends ActionBarActivity {
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
-		}		
+		}						
 		
 		ActionBar abar = getSupportActionBar();
 		abar.setDisplayHomeAsUpEnabled(true);
@@ -84,7 +86,12 @@ public class SettingsActivity extends ActionBarActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_settings,
-					container, false);						
+					container, false);
+			
+			ListView wordsList = (ListView)rootView.findViewById(R.id.listView1);
+			SettingsItemsAdapter settingsAdapter = new SettingsItemsAdapter(getActivity());
+			wordsList.setAdapter(settingsAdapter);
+			
 			return rootView;
 		}
 	}

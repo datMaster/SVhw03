@@ -1098,10 +1098,11 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f060049;
+        public static final int action_settings=0x7f06004d;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
+        public static final int checkBox_active_word=0x7f06004c;
         public static final int checkbox=0x7f06002d;
         public static final int collapseActionView=0x7f06000d;
         public static final int container=0x7f06003c;
@@ -1123,7 +1124,9 @@ containing a value of this type.
         public static final int linearLayout2=0x7f060046;
         public static final int linearLayout3=0x7f06003e;
         public static final int listMode=0x7f060001;
+        public static final int listView1=0x7f060049;
         public static final int list_item=0x7f060029;
+        public static final int list_item_layout=0x7f06004a;
         public static final int middle=0x7f060012;
         public static final int never=0x7f060009;
         public static final int none=0x7f060010;
@@ -1141,7 +1144,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060036;
         public static final int search_src_text=0x7f060037;
         public static final int search_voice_btn=0x7f06003b;
-        public static final int select_all=0x7f06004a;
+        public static final int select_all=0x7f06004e;
         public static final int shortcut=0x7f06002e;
         public static final int showCustom=0x7f060007;
         public static final int showHome=0x7f060004;
@@ -1151,6 +1154,7 @@ containing a value of this type.
         public static final int tabMode=0x7f060002;
         public static final int textView_entered=0x7f060043;
         public static final int textView_entered_label=0x7f060042;
+        public static final int textView_item=0x7f06004b;
         public static final int textView_lives=0x7f060040;
         public static final int textView_need_word=0x7f060048;
         public static final int textView_please_eneter_label=0x7f060047;
@@ -1217,7 +1221,8 @@ containing a value of this type.
         public static final int activity_settings=0x7f030019;
         public static final int fragment_main=0x7f03001a;
         public static final int fragment_settings=0x7f03001b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001c;
+        public static final int settings_list_item=0x7f03001c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001d;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;
