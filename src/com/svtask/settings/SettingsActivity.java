@@ -1,9 +1,5 @@
 package com.svtask.settings;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.svtask.adapters.SettingsItemsAdapter;
 import com.svtask2.R;
 
@@ -18,31 +14,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class SettingsActivity extends ActionBarActivity {
 
+	private static ListView wordsList;	
+	private static SettingsItemsAdapter settingsAdapter;
+	private SharedPreferences sharePreferences;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-
+		sharePreferences = getSharedPreferences("com.svtask2.app", Context.MODE_PRIVATE);
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment(sharePreferences)).commit();
 		}						
 		
 		ActionBar abar = getSupportActionBar();
 		abar.setDisplayHomeAsUpEnabled(true);
 		abar.setDisplayShowHomeEnabled(false);
-		abar.setDisplayShowTitleEnabled(true);
-		
-		abar.setDisplayUseLogoEnabled(false);
+		abar.setDisplayShowTitleEnabled(true);		
+		abar.setDisplayUseLogoEnabled(false);			
 		
 	}
 
@@ -50,10 +44,14 @@ public class SettingsActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.settings, menu);		
+		getMenuInflater().inflate(R.menu.settings, menu);
+		settingsAdapter = (SettingsItemsAdapter) wordsList.getAdapter();
+		settingsAdapter.setMenu(menu);
+		settingsAdapter.checkSelected();
+		
 		return true;
 	}
-
+		
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -62,13 +60,12 @@ public class SettingsActivity extends ActionBarActivity {
 		
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-			Toast.makeText(getApplicationContext(), "home", Toast.LENGTH_LONG).show();
+			settingsAdapter.saveSharedPreferences();
 			finish();
 			break;
 		}
 		case R.id.select_all: {
-			Toast.makeText(getApplicationContext(), "select all", Toast.LENGTH_LONG).show();			
-			
+			settingsAdapter.selecAll();			
 			break;
 		}
 			
@@ -77,27 +74,27 @@ public class SettingsActivity extends ActionBarActivity {
 		}
 				
 		return super.onOptionsItemSelected(item);
-	}
+	}		
 
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
+		private static SharedPreferences sharedPreferences;
+		public PlaceholderFragment(SharedPreferences sharedPreferences) {
+			PlaceholderFragment.sharedPreferences = sharedPreferences;
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_settings,
-					container, false);
+			View rootView = inflater.inflate(R.layout.fragment_settings, container, false);			
 			
-			ListView wordsList = (ListView)rootView.findViewById(R.id.listView1);
-			SettingsItemsAdapter settingsAdapter = new SettingsItemsAdapter(getActivity());
+			wordsList = (ListView)rootView.findViewById(R.id.listView1);			
+			SettingsItemsAdapter settingsAdapter = new SettingsItemsAdapter(getActivity(), sharedPreferences);
 			wordsList.setAdapter(settingsAdapter);
-			
+									
 			return rootView;
 		}
-	}	
+	}		
 }

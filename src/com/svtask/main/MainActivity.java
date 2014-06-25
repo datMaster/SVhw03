@@ -5,7 +5,6 @@ import java.util.Random;
 import com.svtask.settings.SettingsActivity;
 import com.svtask2.R;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
