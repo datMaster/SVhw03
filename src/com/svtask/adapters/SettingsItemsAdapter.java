@@ -1,15 +1,11 @@
 package com.svtask.adapters;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.svtask.utils.SettingsViewHolder;
+import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,9 +25,9 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	private int selectedCount = 0;
 	private int selectAllCount = 0;		
 	private MenuItem selectAllMenuItem;	
-	private SharedPreferences sharePreferences;
+	private SharedPreferencesWorker sharePreferences;
 	
-	public SettingsItemsAdapter(Context context, SharedPreferences sharePreferences) {
+	public SettingsItemsAdapter(Context context, SharedPreferencesWorker sharePreferences) {
 
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);		
@@ -127,21 +123,14 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	}
 	
 	public void saveSharedPreferences() {
-		Set<String> set = new HashSet<String>();
-		for(int i = 0; i < chBoxStatusList.size(); i ++) {
-			if(chBoxStatusList.get(i)) {
-				set.add(Integer.toString(i));
-			}
-		}		
-		sharePreferences.edit().putStringSet("selectedWords", set).commit();
+		sharePreferences.saveSharedPreferences(chBoxStatusList);
 	}
 	
 	public void loadSharedPreferences() {
-		Set<String>set = sharePreferences.getStringSet("selectedWords", new HashSet<String>());		
-		for(Iterator<String>iterator = set.iterator(); iterator.hasNext(); ) {
-			int index = Integer.parseInt(iterator.next());
-			chBoxStatusList.set(index, true);
-			selectedCount += index + 1;
+		ArrayList<Integer> allowedIndexes = sharePreferences.getAllowedWords();						
+		for(int index = 0; index < allowedIndexes.size(); index ++) {			
+			chBoxStatusList.set(allowedIndexes.get(index), true);
+			selectedCount += allowedIndexes.get(index) + 1;
 		}	
 	}
 }

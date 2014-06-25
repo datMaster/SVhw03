@@ -13,7 +13,8 @@
     <string name="you_scores">Scores</string>
     <string name="back_button">Back</string>    
     <string name="settings">Settings</string>
-    <string name="select_all">Select All</string>    
+    <string name="select_all">Select All</string>
+    <string name="help_string">Available words not found! Select list of allowed words at settings.</string>      
     
     <string-array name="words">
         <item>apple</item>

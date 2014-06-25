@@ -8,4 +8,6 @@ public class Constants {
 	public static final int SCORE_INIT = 0;
 	public static final Boolean DEADED = true;
 	public static final Boolean LIVING = false;
+	public static final String SHAREDPREFERENCES_KEY = "selectedWords";
+	public static final String SHAREDPREFERENCES_APP_NAME = "com.svtask2.app";
 }

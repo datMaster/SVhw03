@@ -1,11 +1,12 @@
 package com.svtask.settings;
 
 import com.svtask.adapters.SettingsItemsAdapter;
+import com.svtask.main.Constants;
+import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -20,13 +21,15 @@ public class SettingsActivity extends ActionBarActivity {
 
 	private static ListView wordsList;	
 	private static SettingsItemsAdapter settingsAdapter;
-	private SharedPreferences sharePreferences;
+	private SharedPreferencesWorker sharePreferences;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
-		sharePreferences = getSharedPreferences("com.svtask2.app", Context.MODE_PRIVATE);
+		
+		sharePreferences = new SharedPreferencesWorker(getSharedPreferences(Constants.SHAREDPREFERENCES_APP_NAME, 
+				Context.MODE_PRIVATE));
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment(sharePreferences)).commit();
@@ -74,14 +77,20 @@ public class SettingsActivity extends ActionBarActivity {
 		}
 				
 		return super.onOptionsItemSelected(item);
-	}		
+	}	
+	
+	@Override
+	public void onBackPressed() {	   
+		settingsAdapter.saveSharedPreferences();
+		finish();
+	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-		private static SharedPreferences sharedPreferences;
-		public PlaceholderFragment(SharedPreferences sharedPreferences) {
+		private static SharedPreferencesWorker sharedPreferences;
+		public PlaceholderFragment(SharedPreferencesWorker sharedPreferences) {
 			PlaceholderFragment.sharedPreferences = sharedPreferences;
 		}
 

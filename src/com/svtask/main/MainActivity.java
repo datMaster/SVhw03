@@ -1,8 +1,10 @@
 package com.svtask.main;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.svtask.settings.SettingsActivity;
+import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 
 import android.app.AlertDialog;
@@ -12,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager.OnActivityResultListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,14 +29,21 @@ import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {			
 	
+	private SharedPreferencesWorker sharedPreferences;
+	private ArrayList<Integer> allowedWords = new ArrayList<Integer>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);		
+		sharedPreferences = new SharedPreferencesWorker(getSharedPreferences(Constants.SHAREDPREFERENCES_APP_NAME, 
+				Context.MODE_PRIVATE));
+		allowedWords = sharedPreferences.getAllowedWords();
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment(allowedWords)).commit();
 		}		
+		
 	}
 
 	@Override
@@ -52,12 +62,13 @@ public class MainActivity extends ActionBarActivity {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			
-			startActivity(new Intent(this, SettingsActivity.class));
-			
+			Intent settings = new Intent(this, SettingsActivity.class);
+			startActivity(settings);						
+									
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
+	}	
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -76,9 +87,10 @@ public class MainActivity extends ActionBarActivity {
 		private int lives;
 		private Random rand;				
 		private CountDownTimer timer;
-		
-		
-		public PlaceholderFragment() {
+		private ArrayList<Integer> allowedWordsIndexes;
+				
+		public PlaceholderFragment(ArrayList<Integer> alloweWords) {
+			allowedWordsIndexes = alloweWords;
 		}
 
 		@Override
@@ -149,7 +161,13 @@ public class MainActivity extends ActionBarActivity {
 			lives = Constants.LIVES;
 			updateLives();
 			updateScore();
-			nextNeedString();			
+			if(allowedWordsIndexes.size() == 0) {
+				tvRepeat.setText(getString(R.string.help_string));
+				etInput.setEnabled(false);
+			}
+			else {
+				nextNeedString();
+			}
 		}
 		
 		private void nextWord(Boolean deadStatus) {
@@ -163,9 +181,9 @@ public class MainActivity extends ActionBarActivity {
 			startTimer();
 		}
 		
-		private void nextNeedString() {
-			int id = rand.nextInt(words.length - 1);			
-			tvRepeat.setText(words[id]);
+		private void nextNeedString() {			
+			int id = rand.nextInt(allowedWordsIndexes.size() - 1);			
+			tvRepeat.setText(words[allowedWordsIndexes.get(id)]);
 		}
 		
 		private void dead() {			
