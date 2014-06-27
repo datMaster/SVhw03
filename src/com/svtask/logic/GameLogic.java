@@ -116,7 +116,7 @@ public class GameLogic {
 		score = Constants.SCORE_INIT;
 		lives = Constants.LIVES;
 		updateLives();
-		updateScores();
+		updateScore();
 		viewHolder.clearInputs();							
 	}
 	
@@ -124,7 +124,7 @@ public class GameLogic {
 		viewHolder.updateLives(activity.getString(R.string.lives) + lives);
 	}
 	
-	private void updateScores() {
+	private void updateScore() {
 		viewHolder.updateScores(activity.getString(R.string.score) + score);
 	}
 	
@@ -145,7 +145,7 @@ public class GameLogic {
 		stopTimer();
 		if(deadStatus == Constants.LIVING) {
 			score ++;
-			updateScores();							
+			updateScore();							
 		}
 		viewHolder.clearInputs();
 		nextNeedString();				

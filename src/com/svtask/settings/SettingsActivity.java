@@ -98,7 +98,7 @@ public class SettingsActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_settings, container, false);			
 			
-			wordsList = (ListView)rootView.findViewById(R.id.listView1);			
+			wordsList = (ListView)rootView.findViewById(R.id.listView_settings);			
 			SettingsItemsAdapter settingsAdapter = new SettingsItemsAdapter(getActivity(), sharedPreferences);
 			wordsList.setAdapter(settingsAdapter);
 									
