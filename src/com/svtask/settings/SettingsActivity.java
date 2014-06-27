@@ -1,7 +1,6 @@
 package com.svtask.settings;
 
 import com.svtask.adapters.SettingsItemsAdapter;
-import com.svtask.main.Constants;
 import com.svtask.utils.SharedPreferencesWorker;
 import com.svtask2.R;
 

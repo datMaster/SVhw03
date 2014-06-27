@@ -6,7 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import android.content.SharedPreferences;
-import com.svtask.main.Constants;
+
+import com.svtask.settings.Constants;
 
 public class SharedPreferencesWorker {
 	private SharedPreferences sharedPreferences;
