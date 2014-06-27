@@ -33,4 +33,5 @@ public class SharedPreferencesWorker {
 		}	
 		return allowedIndexes;
 	}
+		
 }

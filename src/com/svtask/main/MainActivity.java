@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager.OnActivityResultListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,18 +29,18 @@ import android.widget.TextView;
 public class MainActivity extends ActionBarActivity {			
 	
 	private SharedPreferencesWorker sharedPreferences;
-	private ArrayList<Integer> allowedWords = new ArrayList<Integer>();
+	private PlaceholderFragment placeHolder;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);		
+		setContentView(R.layout.activity_main);
 		sharedPreferences = new SharedPreferencesWorker(getSharedPreferences(Constants.SHAREDPREFERENCES_APP_NAME, 
 				Context.MODE_PRIVATE));
-		allowedWords = sharedPreferences.getAllowedWords();
+		placeHolder = new PlaceholderFragment(sharedPreferences);				
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment(allowedWords)).commit();
+			.add(R.id.container, placeHolder).commit();
 		}		
 		
 	}
@@ -63,7 +62,8 @@ public class MainActivity extends ActionBarActivity {
 		if (id == R.id.action_settings) {
 			
 			Intent settings = new Intent(this, SettingsActivity.class);
-			startActivity(settings);						
+			startActivity(settings);
+			placeHolder.stop();			
 									
 			return true;
 		}
@@ -81,6 +81,7 @@ public class MainActivity extends ActionBarActivity {
 		private TextView tvEntered;
 		private TextView tvRepeat;
 		private TextView tvTimer;
+		private TextView tvPleaseInputLabel;
 		private Boolean isTimerStarted = false;
 		private CharSequence[] words;
 		private int score;
@@ -88,9 +89,10 @@ public class MainActivity extends ActionBarActivity {
 		private Random rand;				
 		private CountDownTimer timer;
 		private ArrayList<Integer> allowedWordsIndexes;
+		private SharedPreferencesWorker sharedPrefences;
 				
-		public PlaceholderFragment(ArrayList<Integer> alloweWords) {
-			allowedWordsIndexes = alloweWords;
+		public PlaceholderFragment(SharedPreferencesWorker sharedPref) {
+			sharedPrefences = sharedPref;
 		}
 
 		@Override
@@ -98,6 +100,7 @@ public class MainActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 			
+			tvPleaseInputLabel = (TextView)rootView.findViewById(R.id.textView_please_eneter_label);
 			etInput = (EditText)rootView.findViewById(R.id.editText_inputed_words);
 			tvScore = (TextView)rootView.findViewById(R.id.textView_score);
 			tvLives = (TextView)rootView.findViewById(R.id.textView_lives);
@@ -128,6 +131,11 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					if(!isTimerStarted && (s.length() > 0)) {
+						timer.start();
+						isTimerStarted = true;
+					}
+					
 					tvEntered.setText(etInput.getText());						
 					String need = tvRepeat.getText().toString();					 										
 					if(need.length() == count) {						
@@ -139,15 +147,12 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void beforeTextChanged(CharSequence s, int start, int count,	int after) {				
-					if(!isTimerStarted) {
-						timer.start();
-						isTimerStarted = true;
-					}
+
 				}
 				
 				@Override
 				public void afterTextChanged(Editable s) {
-					// TODO Auto-generated method stub					
+					
 				}
 			});						
 			
@@ -156,18 +161,51 @@ public class MainActivity extends ActionBarActivity {
 			return rootView;
 		}
 		
-		private void init() {
+		@Override
+		public void onResume() {
+			super.onResume();			
+			if(checkAllowedWords())
+				nextNeedString();
+		}
+		
+		private boolean checkAllowedWords() {
+			updateAllowedWords();
+			if(allowedWordsIndexes.size() == 0) {
+				tvPleaseInputLabel.setVisibility(View.GONE);
+				tvRepeat.setText(getString(R.string.help_string));
+				etInput.setEnabled(false);
+				return false;
+			}
+			else {
+				tvPleaseInputLabel.setVisibility(View.VISIBLE);
+				etInput.setEnabled(true);				
+				return true;
+			}
+		}
+		
+		public void stop() {			
+			if (isTimerStarted) {
+				stopTimer();
+				reset();
+			}
+		}
+		
+		private void reset() {
 			score = Constants.SCORE_INIT;
 			lives = Constants.LIVES;
 			updateLives();
-			updateScore();
-			if(allowedWordsIndexes.size() == 0) {
-				tvRepeat.setText(getString(R.string.help_string));
-				etInput.setEnabled(false);
-			}
-			else {
-				nextNeedString();
-			}
+			updateScore();			
+			clearInputs();			
+		}
+		
+		private void updateAllowedWords() {
+			allowedWordsIndexes = sharedPrefences.getAllowedWords();
+		}
+		
+		public void init() {
+			reset();			
+			if(checkAllowedWords() == true)
+				nextNeedString();			
 		}
 		
 		private void nextWord(Boolean deadStatus) {
@@ -181,8 +219,10 @@ public class MainActivity extends ActionBarActivity {
 			startTimer();
 		}
 		
-		private void nextNeedString() {			
-			int id = rand.nextInt(allowedWordsIndexes.size() - 1);			
+		private void nextNeedString() {				
+			int id = 0;
+			if (allowedWordsIndexes.size() > 1)
+				id = rand.nextInt(allowedWordsIndexes.size() - 1);			
 			tvRepeat.setText(words[allowedWordsIndexes.get(id)]);
 		}
 		
