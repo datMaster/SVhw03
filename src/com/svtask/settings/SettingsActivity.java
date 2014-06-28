@@ -67,7 +67,7 @@ public class SettingsActivity extends ActionBarActivity {
 			break;
 		}
 		case R.id.select_all: {
-			settingsAdapter.selecAll();			
+			settingsAdapter.selectAll();			
 			break;
 		}
 			

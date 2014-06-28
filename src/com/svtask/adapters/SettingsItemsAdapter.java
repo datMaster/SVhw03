@@ -26,13 +26,15 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	private int selectAllCount = 0;		
 	private MenuItem selectAllMenuItem;	
 	private SharedPreferencesWorker sharePreferences;
+	private Context context;
 	
 	public SettingsItemsAdapter(Context context, SharedPreferencesWorker sharePreferences) {
 
-		inflater = (LayoutInflater) context
+		this.context =  context;
+		inflater = (LayoutInflater) this.context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);		
 		this.sharePreferences = sharePreferences;
-		words = context.getResources().getTextArray(R.array.words);
+		words = this.context.getResources().getTextArray(R.array.words);
 		holderList = new ArrayList<SettingsViewHolder>();
 		chBoxStatusList = new ArrayList<Boolean>();	
 		selectAllCount = words.length + (((words.length - 1) * words.length) / 2);
@@ -98,23 +100,38 @@ public class SettingsItemsAdapter extends BaseAdapter implements OnClickListener
 	
 	public void checkSelected() {
 		if (selectedCount == selectAllCount) {
-			selectAllMenuItem.setEnabled(false);
+			selectAllMenuItem.setTitle(context.getResources().getString(R.string.unselect_all));
 		} 
 		else {
-			selectAllMenuItem.setEnabled(true);
+			selectAllMenuItem.setTitle(context.getResources().getString(R.string.select_all));
 		}
 			
 	}
 	
-	public void selecAll() {
-		for(int i = 0; i < getCount(); i ++) {		
+	private void unselectAll() {
+		for (int i = 0; i < getCount(); i++) {
 			SettingsViewHolder holder = holderList.get(i);
 			if (holder.chBox != null) {
-				holder.chBox.setChecked(true);
+				holder.chBox.setChecked(false);
 			}
-			chBoxStatusList.set(i, true);			
+			chBoxStatusList.set(i, false);
 		}
-		selectedCount = selectAllCount;
+		selectedCount = 0;
+	}
+	
+	public void selectAll() {
+		if (selectAllCount == selectedCount) {
+			unselectAll();
+		} else {
+			for (int i = 0; i < getCount(); i++) {
+				SettingsViewHolder holder = holderList.get(i);
+				if (holder.chBox != null) {
+					holder.chBox.setChecked(true);
+				}
+				chBoxStatusList.set(i, true);
+			}
+			selectedCount = selectAllCount;
+		}
 		checkSelected();
 	}
 	
